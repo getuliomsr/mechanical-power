@@ -1,460 +1,283 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mechanical Power Calculator</title>
-
-  <style>
-    *{
-      box-sizing:border-box;
-      font-family:Arial, Helvetica, sans-serif;
-    }
-
-    body{
-      margin:0;
-      padding:0;
-      background:#f3f5f9;
-      color:#1f2937;
-    }
-
-    .container{
-      max-width:900px;
-      margin:40px auto;
-      background:white;
-      padding:32px;
-      border-radius:18px;
-      box-shadow:0 8px 30px rgba(0,0,0,0.08);
-    }
-
-    h1{
-      margin-top:0;
-      color:#0f172a;
-    }
-
-    h2{
-      margin-top:32px;
-      color:#1e293b;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-    }
-
-    .full{
-      grid-column:1 / -1;
-    }
-
-    label{
-      font-weight:600;
-      display:block;
-      margin-bottom:6px;
-    }
-
-    input, select{
-      width:100%;
-      padding:12px;
-      border-radius:10px;
-      border:1px solid #d1d5db;
-      font-size:15px;
-    }
-
-    .mode-buttons{
-      display:flex;
-      gap:12px;
-      margin-bottom:20px;
-    }
-
-    .mode-btn{
-      flex:1;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:bold;
-      font-size:16px;
-      background:#e5e7eb;
-      transition:0.2s;
-    }
-
-    .mode-btn.active{
-      background:#2563eb;
-      color:white;
-    }
-
-    button.calculate{
-      width:100%;
-      margin-top:24px;
-      padding:16px;
-      border:none;
-      border-radius:14px;
-      background:#0f172a;
-      color:white;
-      font-size:18px;
-      cursor:pointer;
-      font-weight:bold;
-    }
-
-    .result{
-      margin-top:28px;
-      padding:24px;
-      border-radius:16px;
-      background:#f8fafc;
-      border-left:8px solid #22c55e;
-    }
-
-    .mp-value{
-      font-size:42px;
-      font-weight:bold;
-      margin:10px 0;
-    }
-
-    .good{
-      color:#16a34a;
-    }
-
-    .warning{
-      color:#d97706;
-    }
-
-    .danger{
-      color:#dc2626;
-    }
-
-    .tips{
-      margin-top:20px;
-      background:#fff;
-      border-radius:12px;
-      padding:18px;
-      border:1px solid #e5e7eb;
-    }
-
-    ul{
-      margin-top:10px;
-      padding-left:20px;
-    }
-
-    .formula{
-      background:#eef2ff;
-      padding:14px;
-      border-radius:10px;
-      margin-top:12px;
-      font-family:monospace;
-      overflow:auto;
-    }
-
-    footer{
-      margin-top:40px;
-      font-size:14px;
-      color:#475569;
-      line-height:1.5;
-    }
-
-    a{
-      color:#2563eb;
-      text-decoration:none;
-    }
-
-    @media(max-width:700px){
-      .grid{
-        grid-template-columns:1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Mechanical Power</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --surface: #ffffff;
+            --bg: #f3f4f6;
+            --text: #1f2937;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
+        
+        .container { background: var(--surface); max-width: 500px; width: 100%; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        
+        h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin-bottom: 5px; }
+        p.subtitle { text-align: center; font-size: 0.9rem; color: #6b7280; margin-bottom: 20px; }
+        
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; flex: 1; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
+        select, input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; transition: border-color 0.2s; }
+        select:focus, input:focus { outline: none; border-color: var(--primary); }
+        
+        .hidden { display: none; }
+        
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        button:hover { background: #1d4ed8; }
+        
+        #result-card { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; }
+        #power-value { font-size: 2rem; font-weight: bold; margin: 10px 0; }
+        .sub-value { font-size: 1.1rem; font-weight: normal; margin-bottom: 5px; color: #374151; }
+        .pbw-info { font-size: 0.9rem; color: #6b7280; margin-bottom: 15px; }
+        #status-badge { display: inline-block; padding: 5px 12px; border-radius: 9999px; font-weight: bold; font-size: 0.85rem; color: white; margin-bottom: 15px; }
+        .tips { font-size: 0.9rem; text-align: left; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 6px; }
+        
+        .reference { margin-top: 30px; font-size: 0.75rem; color: #9ca3af; text-align: justify; border-top: 1px solid var(--border); padding-top: 10px; }
+    </style>
 </head>
 <body>
 
 <div class="container">
+    <h1>Mechanical Power</h1>
+    <p class="subtitle">Avaliação à Beira do Leito</p>
 
-  <h1>Mechanical Power Calculator</h1>
-
-  <p>
-    Calculadora de Mechanical Power para ventilação mecânica intraoperatória e terapia intensiva.
-  </p>
-
-  <div class="mode-buttons">
-    <button class="mode-btn active" id="vcvBtn">VCV</button>
-    <button class="mode-btn" id="pcvBtn">PCV</button>
-  </div>
-
-  <div class="grid">
-
-    <div>
-      <label>Sexo</label>
-      <select id="sexo">
-        <option value="male">Masculino</option>
-        <option value="female">Feminino</option>
-      </select>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="gender">Sexo</label>
+            <select id="gender">
+                <option value="m">Masculino</option>
+                <option value="f">Feminino</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="height">Altura (cm)</label>
+            <input type="number" id="height" placeholder="ex: 170">
+        </div>
     </div>
 
-    <div>
-      <label>Altura (cm)</label>
-      <input type="number" id="altura" placeholder="170">
+    <div class="form-row">
+        <div class="form-group">
+            <label for="mode">Modo</label>
+            <select id="mode" onchange="updateForm()">
+                <option value="vcv">VCV</option>
+                <option value="pcv">PCV</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="formula-group">
+            <label for="formula">Fórmula</label>
+            <select id="formula" onchange="updateForm()">
+                <option value="giosa">Giosa (Simplificada)</option>
+                <option value="gattinoni">Gattinoni (Referência)</option>
+            </select>
+        </div>
     </div>
 
-    <div class="full">
-      <button class="calculate" onclick="calcularPBW()">
-        Calcular Peso Predito
-      </button>
+    <div class="form-group" id="group-tv">
+        <label for="tv">Volume Corrente (mL)</label>
+        <input type="number" id="tv" placeholder="ex: 450">
     </div>
 
-    <div class="full">
-      <div id="pbwResult"></div>
+    <div class="form-row">
+        <div class="form-group" id="group-rr">
+            <label for="rr">FR (irpm)</label>
+            <input type="number" id="rr" placeholder="ex: 15">
+        </div>
+        <div class="form-group" id="group-peep">
+            <label for="peep">PEEP (cmH2O)</label>
+            <input type="number" id="peep" placeholder="ex: 5">
+        </div>
     </div>
 
-    <div>
-      <label>Volume Corrente (mL)</label>
-      <input type="number" id="vt" placeholder="500">
+    <div class="form-row">
+        <div class="form-group" id="group-peak">
+            <label for="peak">P. Pico (cmH2O)</label>
+            <input type="number" id="peak" placeholder="ex: 25">
+        </div>
+        <div class="form-group hidden" id="group-plat">
+            <label for="plat">P. Platô (cmH2O)</label>
+            <input type="number" id="plat" placeholder="ex: 20">
+        </div>
     </div>
 
-    <div>
-      <label>Frequência Respiratória</label>
-      <input type="number" id="rr" placeholder="14">
+    <div class="form-group" id="group-flow">
+        <label for="flow">Fluxo Inspiratório (L/min)</label>
+        <input type="number" id="flow" placeholder="ex: 60">
     </div>
 
-    <div>
-      <label>PEEP (cmH₂O)</label>
-      <input type="number" id="peep" placeholder="8">
+    <div class="form-group hidden" id="group-pinsp">
+        <label for="pinsp">Pinsp (Pressão de Suporte acima da PEEP)</label>
+        <input type="number" id="pinsp" placeholder="ex: 15">
     </div>
 
-    <div id="ppeakDiv">
-      <label>Pressão de Pico (cmH₂O)</label>
-      <input type="number" id="ppeak" placeholder="22">
+    <button onclick="calculatePower()">Calcular MP</button>
+
+    <div id="result-card">
+        <h3 style="margin: 0; color: #374151;">Mechanical Power</h3>
+        <div id="power-value">0.0 J/min</div>
+        <div id="status-badge">Analisando...</div>
+        <div class="tips" id="clinical-tips"></div>
     </div>
 
-    <div id="flowDiv">
-      <label>Fluxo Inspiratório (L/min)</label>
-      <input type="number" id="flow" placeholder="60">
+    <div class="reference">
+        <strong>Referência:</strong> Giosa, L. et al. Mechanical power at a glance. Intensive Care Med Exp 7, 61 (2019). Limiar de risco baseado no não-normalizado de 18 J/min. O uso de Peso Predito segue a fórmula ARDSNet.
     </div>
-
-    <div id="drivingDiv" style="display:none;">
-      <label>Driving Pressure ΔP (cmH₂O)</label>
-      <input type="number" id="dp" placeholder="12">
-    </div>
-
-  </div>
-
-  <button class="calculate" onclick="calcularMP()">
-    Calcular Mechanical Power
-  </button>
-
-  <div class="result" id="resultado" style="display:none;">
-    <h2>Resultado</h2>
-
-    <div class="mp-value" id="mpValue"></div>
-
-    <div id="interpretacao"></div>
-
-    <div class="formula" id="formulaText"></div>
-
-    <div class="tips">
-      <strong>Dicas Clínicas Inteligentes</strong>
-      <ul id="tipsList"></ul>
-    </div>
-  </div>
-
-  <footer>
-    <strong>Referência principal:</strong><br><br>
-
-    Giosa L et al. Mechanical power at a glance: a simple surrogate for volume-controlled ventilation.
-    Intensive Care Med Exp. 2019.<br>
-
-    DOI:
-    <a href="https://doi.org/10.1186/s40635-019-0276-8" target="_blank">
-      https://doi.org/10.1186/s40635-019-0276-8
-    </a>
-  </footer>
-
 </div>
 
 <script>
+    function updateForm() {
+        const mode = document.getElementById('mode').value;
+        const formulaSelect = document.getElementById('formula');
+        
+        if (mode === 'pcv') {
+            formulaSelect.innerHTML = '<option value="becher">Becher et al.</option>';
+        } else {
+            if(formulaSelect.querySelector('option[value="becher"]')) {
+                formulaSelect.innerHTML = '<option value="giosa">Giosa (Simplificada)</option><option value="gattinoni">Gattinoni (Referência)</option>';
+            }
+        }
 
-let mode = "VCV";
+        const formula = document.getElementById('formula').value;
 
-const vcvBtn = document.getElementById("vcvBtn");
-const pcvBtn = document.getElementById("pcvBtn");
+        // Resetar visibilidade
+        const fields = ['group-tv', 'group-rr', 'group-peep', 'group-peak', 'group-plat', 'group-flow', 'group-pinsp'];
+        fields.forEach(f => document.getElementById(f).classList.add('hidden'));
 
-vcvBtn.addEventListener("click", () => {
-  mode = "VCV";
+        // Ativar de acordo com a fórmula
+        document.getElementById('group-tv').classList.remove('hidden');
+        document.getElementById('group-rr').classList.remove('hidden');
+        document.getElementById('group-peep').classList.remove('hidden');
 
-  vcvBtn.classList.add("active");
-  pcvBtn.classList.remove("active");
-
-  document.getElementById("ppeakDiv").style.display = "block";
-  document.getElementById("flowDiv").style.display = "block";
-  document.getElementById("drivingDiv").style.display = "none";
-});
-
-pcvBtn.addEventListener("click", () => {
-  mode = "PCV";
-
-  pcvBtn.classList.add("active");
-  vcvBtn.classList.remove("active");
-
-  document.getElementById("ppeakDiv").style.display = "none";
-  document.getElementById("flowDiv").style.display = "none";
-  document.getElementById("drivingDiv").style.display = "block";
-});
-
-function calcularPBW(){
-
-  const sexo = document.getElementById("sexo").value;
-  const altura = parseFloat(document.getElementById("altura").value);
-
-  if(!altura){
-    alert("Digite a altura.");
-    return;
-  }
-
-  let pbw;
-
-  if(sexo === "male"){
-    pbw = 50 + 0.91 * (altura - 152.4);
-  }else{
-    pbw = 45.5 + 0.91 * (altura - 152.4);
-  }
-
-  pbw = pbw.toFixed(1);
-
-  document.getElementById("pbwResult").innerHTML =
-    `<strong>Peso Predito:</strong> ${pbw} kg`;
-}
-
-function calcularMP(){
-
-  const vt_ml = parseFloat(document.getElementById("vt").value);
-  const rr = parseFloat(document.getElementById("rr").value);
-  const peep = parseFloat(document.getElementById("peep").value);
-
-  if(!vt_ml || !rr || !peep){
-    alert("Preencha os campos obrigatórios.");
-    return;
-  }
-
-  const vt = vt_ml / 1000;
-
-  let mp;
-  let formulaTxt = "";
-
-  if(mode === "VCV"){
-
-    const ppeak = parseFloat(document.getElementById("ppeak").value);
-    const flow = parseFloat(document.getElementById("flow").value);
-
-    if(!ppeak || !flow){
-      alert("Preencha pressão de pico e fluxo.");
-      return;
+        if (formula === 'giosa') {
+            document.getElementById('group-peak').classList.remove('hidden');
+            document.getElementById('group-flow').classList.remove('hidden');
+        } else if (formula === 'gattinoni') {
+            document.getElementById('group-peak').classList.remove('hidden');
+            document.getElementById('group-plat').classList.remove('hidden');
+        } else if (formula === 'becher') {
+            document.getElementById('group-pinsp').classList.remove('hidden');
+        }
     }
 
-    const ve = vt * rr;
+    function calculatePower() {
+        const formula = document.getElementById('formula').value;
+        
+        // Dados Ventilatórios
+        const tv_ml = parseFloat(document.getElementById('tv').value) || 0;
+        const tv = tv_ml / 1000; 
+        const rr = parseFloat(document.getElementById('rr').value) || 0;
+        const peep = parseFloat(document.getElementById('peep').value) || 0;
+        const peak = parseFloat(document.getElementById('peak').value) || 0;
+        const plat = parseFloat(document.getElementById('plat').value) || 0;
+        const flow = parseFloat(document.getElementById('flow').value) || 0;
+        const pinsp = parseFloat(document.getElementById('pinsp').value) || 0;
 
-    // Expressão simplificada de Gattinoni/Giosa
-    mp = (ve * (ppeak + peep + (flow / 6))) / 20;
+        // Dados Antropométricos
+        const gender = document.getElementById('gender').value;
+        const height = parseFloat(document.getElementById('height').value) || 0;
+        
+        let pbw = 0;
+        if (height > 0) {
+            if (gender === 'm') {
+                pbw = 50 + 0.91 * (height - 152.4);
+            } else {
+                pbw = 45.5 + 0.91 * (height - 152.4);
+            }
+        }
 
-    formulaTxt =
-      `VE = ${vt.toFixed(2)} × ${rr} = ${ve.toFixed(2)} L/min\n\n` +
-      `MP = [${ve.toFixed(2)} × (${ppeak} + ${peep} + ${flow}/6)] / 20\n\n` +
-      `MP = ${mp.toFixed(1)} J/min`;
+        let power = 0;
+        let tips = [];
 
-  }else{
+        // Cálculos do Power
+        if (formula === 'giosa') {
+            const ve = tv * rr;
+            power = (ve * (peak + peep + (flow / 6))) / 20;
+        } else if (formula === 'gattinoni') {
+            power = 0.098 * rr * tv * (peak - ((plat - peep) / 2));
+        } else if (formula === 'becher') {
+            power = 0.098 * rr * tv * (peep + pinsp);
+        }
 
-    const dp = parseFloat(document.getElementById("dp").value);
+        // Validação básica
+        if(power <= 0 || isNaN(power)) {
+            alert("Por favor, preencha os parâmetros ventilatórios corretamente.");
+            return;
+        }
 
-    if(!dp){
-      alert("Preencha a driving pressure.");
-      return;
+        // Construir visualização do resultado
+        const resultCard = document.getElementById('result-card');
+        const powerValue = document.getElementById('power-value');
+        const badge = document.getElementById('status-badge');
+        const tipsDiv = document.getElementById('clinical-tips');
+
+        resultCard.style.display = 'block';
+        
+        let resultHtml = `${power.toFixed(2)} J/min`;
+        
+        if (pbw > 0) {
+            let normalizedPower = power / pbw;
+            let vtKg = tv_ml / pbw;
+            
+            resultHtml += `<div class="sub-value">Norm: ${normalizedPower.toFixed(3)} J/min/kg</div>`;
+            resultHtml += `<div class="pbw-info">Peso Predito: ${pbw.toFixed(1)} kg | Vt: ${vtKg.toFixed(1)} mL/kg</div>`;
+            
+            if (vtKg > 6.5) {
+                tips.push(`- <strong>Volume Corrente alto:</strong> O paciente está recebendo ${vtKg.toFixed(1)} mL/kg de peso predito. O alvo protetor clássico para prevenir VILI é de 6 mL/kg.`);
+            } else if (vtKg < 5.5) {
+                tips.push(`- <strong>Volume Corrente ultra-protetor:</strong> (${vtKg.toFixed(1)} mL/kg). Monitore PCO2 e o risco de atelectasia se PEEP estiver muito baixa.`);
+            }
+        } else {
+             tips.push("- <em>Preencha a Altura para calcular o Peso Predito e o Volume Corrente ideal (mL/kg).</em>");
+        }
+        
+        powerValue.innerHTML = resultHtml;
+
+        // Classificação Giosa
+        let drivingPressure = formula === 'gattinoni' ? (plat - peep) : (formula === 'becher' ? pinsp : (peak - peep));
+        
+        if (power < 12) {
+            resultCard.style.backgroundColor = '#ecfdf5';
+            powerValue.style.color = 'var(--success)';
+            badge.style.backgroundColor = 'var(--success)';
+            badge.innerText = 'Risco Baixo';
+            tips.push("✅ O paciente parece estar recebendo ventilação adequada. Mantenha a vigilância.");
+        } else if (power >= 12 && power < 18) {
+            resultCard.style.backgroundColor = '#fffbeb';
+            powerValue.style.color = 'var(--warning)';
+            badge.style.backgroundColor = 'var(--warning)';
+            badge.innerText = 'Risco Moderado';
+            tips.push("⚠️ O alvo está em uma zona cinzenta. Considere ajustes se o paciente for de alto risco para VILI.");
+        } else {
+            resultCard.style.backgroundColor = '#fef2f2';
+            powerValue.style.color = 'var(--danger)';
+            badge.style.backgroundColor = 'var(--danger)';
+            badge.innerText = 'Risco Elevado (>18 J/min)';
+            tips.push("🚨 Alta transferência de energia para o pulmão.");
+        }
+
+        // Análise Adicional
+        if (power >= 12) {
+            if (rr > 22) tips.push("- <strong>Frequência alta:</strong> Avalie tolerar hipercapnia permissiva reduzindo a RR.");
+            if (drivingPressure > 14) tips.push("- <strong>Driving Pressure alta:</strong> Reduza o Volume Corrente ou a Pinsp se clinicamente possível.");
+            if (formula === 'giosa' && flow > 60) tips.push("- <strong>Fluxo alto:</strong> Reduzir o fluxo aumenta o tempo inspiratório, mas diminui a pressão resistiva.");
+        }
+
+        tipsDiv.innerHTML = tips.join('<br><br>');
     }
 
-    mp = 0.098 * rr * vt * (dp + peep);
-
-    formulaTxt =
-      `MP = 0.098 × ${rr} × ${vt.toFixed(2)} × (${dp} + ${peep})\n\n` +
-      `MP = ${mp.toFixed(1)} J/min`;
-  }
-
-  mp = mp.toFixed(1);
-
-  const mpValue = document.getElementById("mpValue");
-  const interpretacao = document.getElementById("interpretacao");
-
-  mpValue.innerHTML = `${mp} J/min`;
-
-  mpValue.className = "mp-value";
-
-  if(mp < 12){
-    mpValue.classList.add("good");
-    interpretacao.innerHTML =
-      "✅ Faixa geralmente considerada protetora.";
-  }
-  else if(mp >= 12 && mp < 17){
-    mpValue.classList.add("warning");
-    interpretacao.innerHTML =
-      "⚠️ Zona intermediária. Avalie driving pressure, FR e complacência.";
-  }
-  else{
-    mpValue.classList.add("danger");
-    interpretacao.innerHTML =
-      "🚨 Mechanical Power elevado associado a maior risco de VILI.";
-  }
-
-  document.getElementById("formulaText").innerText = formulaTxt;
-
-  gerarDicas(mp);
-
-  document.getElementById("resultado").style.display = "block";
-}
-
-function gerarDicas(mp){
-
-  const vt_ml = parseFloat(document.getElementById("vt").value);
-  const rr = parseFloat(document.getElementById("rr").value);
-  const peep = parseFloat(document.getElementById("peep").value);
-
-  const tips = [];
-
-  if(vt_ml > 8 * 70){
-    tips.push("Considere reduzir o volume corrente se clinicamente possível.");
-  }
-
-  if(rr > 18){
-    tips.push("Frequência respiratória elevada pode aumentar o mechanical power.");
-  }
-
-  if(peep >= 12){
-    tips.push("Avalie possível hiperdistensão alveolar com PEEP elevada.");
-  }
-
-  if(mode === "PCV"){
-    const dp = parseFloat(document.getElementById("dp").value);
-
-    if(dp > 15){
-      tips.push("Driving pressure elevada associa-se a pior prognóstico pulmonar.");
-    }
-  }
-
-  if(mp > 17){
-    tips.push("Mechanical power elevado aumenta risco de ventilator-induced lung injury (VILI).");
-  }
-
-  if(tips.length === 0){
-    tips.push("Parâmetros ventilatórios dentro de faixa geralmente protetora.");
-  }
-
-  const list = document.getElementById("tipsList");
-  list.innerHTML = "";
-
-  tips.forEach(tip => {
-    const li = document.createElement("li");
-    li.innerText = tip;
-    list.appendChild(li);
-  });
-}
-
+    // Inicialização
+    updateForm();
 </script>
-
 </body>
 </html>
-```
