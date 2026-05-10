@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Mechanical Power</title>
+    <title>Mechanical Power & Monitorização</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -17,7 +17,6 @@
             --input-bg: #ffffff;
         }
 
-        /* Dark Mode */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #111827;
@@ -29,40 +28,54 @@
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 15px; display: flex; justify-content: center; }
+        body { background-color: var(--bg); color: var(--text); padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        
+        .nav-tabs { display: flex; width: 100%; max-width: 500px; margin-bottom: 15px; background: var(--surface); border-radius: 10px; padding: 5px; border: 1px solid var(--border); }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: var(--text); cursor: pointer; font-weight: bold; border-radius: 8px; font-size: 0.9rem; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
         .container { background: var(--surface); max-width: 500px; width: 100%; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         
-        h1 { font-size: 1.4rem; text-align: center; color: var(--primary); margin-bottom: 20px; }
+        h1 { font-size: 1.3rem; text-align: center; color: var(--primary); margin-bottom: 20px; }
         .form-row { display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start; }
         .form-group { margin-bottom: 12px; flex: 1; }
         label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.8rem; opacity: 0.9; }
         select, input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--input-bg); color: var(--text); }
         
-        /* PBW Style */
-        .pbw-box { height: 46px; background: rgba(37, 99, 235, 0.1); border: 1px dashed var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); }
+        .pbw-box { height: 46px; background: rgba(37, 99, 235, 0.1); border: 1px dashed var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); font-size: 0.9rem; }
 
-        .toggle-row { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 15px; }
+        .toggle-row { background: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 15px; font-size: 0.9rem; }
 
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 10px 0; }
-        .btn-copy { background: #6b7280; margin-top: 5px; font-size: 0.8rem; padding: 8px; }
+        button.main-calc { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        button.btn-copy { width: 100%; background: #6b7280; color: white; border: none; padding: 10px; font-size: 0.8rem; border-radius: 6px; cursor: pointer; margin-top: 10px; }
 
         #result-card { margin-top: 15px; padding: 15px; border-radius: 10px; display: none; border: 1px solid var(--border); }
-        #power-value { font-size: 2.2rem; font-weight: 800; margin: 5px 0; text-align: center; }
+        #power-value { font-size: 2.2rem; font-weight: 800; margin: 5px 0; text-align: center; transition: color 0.3s; }
         .sub-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
         .metric-box { text-align: center; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; }
         
         details { background: rgba(0,0,0,0.03); border-radius: 6px; padding: 10px; margin-top: 10px; font-size: 0.8rem; }
-        .formula-display { font-family: monospace; background: rgba(0,0,0,0.1); padding: 8px; margin-top: 5px; border-radius: 4px; display: block; overflow-x: auto; }
+        .formula-display { font-family: monospace; background: rgba(0,0,0,0.1); padding: 8px; margin-top: 5px; border-radius: 4px; display: block; overflow-x: auto; color: var(--primary); }
 
-        .tips { font-size: 0.85rem; margin-top: 15px; border-left: 3px solid var(--primary); padding-left: 10px; }
-        .reference { margin-top: 25px; font-size: 0.65rem; opacity: 0.6; border-top: 1px solid var(--border); padding-top: 10px; }
+        .concept-card { margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .concept-card h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 8px; }
+        .si-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .si-item { text-align: center; font-size: 0.7rem; background: rgba(0,0,0,0.02); padding: 5px; border-radius: 6px; border: 1px solid var(--border); }
+        .si-item svg { width: 100%; height: 60px; margin-bottom: 5px; }
+
         .hidden { display: none; }
+        .reference { margin-top: 25px; font-size: 0.65rem; opacity: 0.6; border-top: 1px solid var(--border); padding-top: 10px; text-align: center; max-width: 500px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Mechanical Power Calc</h1>
+<div class="nav-tabs">
+    <button id="btn-calc" class="tab-btn active" onclick="showTab('calc')">Calculadora</button>
+    <button id="btn-concepts" class="tab-btn" onclick="showTab('concepts')">Conceitos</button>
+</div>
+
+<div id="tab-calc" class="container">
+    <h1>Mechanical Power</h1>
 
     <div class="form-row">
         <div class="form-group" style="flex: 0.7;">
@@ -80,23 +93,14 @@
     </div>
 
     <div class="form-row">
-        <div class="form-group">
-            <label>Modo</label>
-            <select id="mode" onchange="updateFormulaOptions()">
-                <option value="vcv">VCV</option>
-                <option value="pcv">PCV</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Fórmula</label>
-            <select id="formula" onchange="updateUIFields()"></select>
-        </div>
+        <div class="form-group"><label>Modo</label><select id="mode" onchange="updateFormulaOptions()"><option value="vcv">VCV</option><option value="pcv">PCV</option></select></div>
+        <div class="form-group"><label>Fórmula</label><select id="formula" onchange="updateUIFields()"></select></div>
     </div>
 
-    <div class="form-group" id="group-tv"><label>Volume Corrente (mL)</label><input type="number" id="tv"></div>
+    <div class="form-group" id="group-tv"><label>Volume Corrente (mL)</label><input type="number" id="tv" placeholder="450"></div>
     <div class="form-row">
-        <div class="form-group"><label>FR (irpm)</label><input type="number" id="rr"></div>
-        <div class="form-group"><label>PEEP (cmH2O)</label><input type="number" id="peep"></div>
+        <div class="form-group"><label>FR (irpm)</label><input type="number" id="rr" placeholder="12"></div>
+        <div class="form-group"><label>PEEP (cmH2O)</label><input type="number" id="peep" placeholder="5"></div>
     </div>
     <div class="form-row">
         <div class="form-group hidden" id="group-peak"><label>P. Pico</label><input type="number" id="peak"></div>
@@ -105,37 +109,94 @@
     </div>
     <div class="form-group hidden" id="group-flow"><label>Fluxo (L/min)</label><input type="number" id="flow" value="60"></div>
 
-    <div class="toggle-row" onclick="togglePneumo()">
+    <div class="toggle-row" onclick="document.getElementById('pneumo').click()">
         <input type="checkbox" id="pneumo" style="width: auto;">
-        <label style="margin:0; cursor:pointer;">Pneumoperitônio Ativo?</label>
+        <label>Pneumoperitônio Ativo</label>
     </div>
 
-    <button onclick="calculate()">Calcular</button>
+    <button class="main-calc" onclick="calculate()">Calcular</button>
 
     <div id="result-card">
         <div id="power-value">0.0 J/min</div>
         <div class="sub-metrics">
             <div class="metric-box"><div style="font-size:0.6rem">DRIVING PRESSURE</div><div id="res-dp" style="font-weight:bold">-</div></div>
+            <div class="metric-box"><div style="font-size:0.6rem">COMPLACÊNCIA</div><div id="res-comp" style="font-weight:bold">-</div></div>
             <div class="metric-box"><div style="font-size:0.6rem">ML/KG PBW</div><div id="res-mlkg" style="font-weight:bold">-</div></div>
+            <div class="metric-box"><div style="font-size:0.6rem">VOL. MINUTO</div><div id="res-ve" style="font-weight:bold">-</div></div>
         </div>
-        <div class="tips" id="tips"></div>
-        
+
+        <div id="tips" style="font-size: 0.85rem; margin-top: 15px; border-left: 3px solid var(--primary); padding-left: 10px; line-height: 1.4;"></div>
+
         <details>
-            <summary>Memorial de Cálculo</summary>
+            <summary style="cursor:pointer; font-weight:bold; margin-top:10px;">Ver Fórmula de Cálculo</summary>
             <div class="formula-display" id="formula-text"></div>
+            <p style="font-size: 0.7rem; margin-top:5px; opacity: 0.7;">Fator 0.098 converte L·cmH2O em Joules.</p>
         </details>
 
         <button class="btn-copy" onclick="copySummary()">Copiar Resumo para Prontuário</button>
     </div>
+</div>
 
-    <div class="reference">
-        <strong>Referências:</strong> Giosa et al. (2019) | Gattinoni (2016) | Becher (2019). PBW: Devine (1974). 
-        Uso do Mechanical Power no transoperatório deve considerar variações de pressão intra-abdominal.
+<div id="tab-concepts" class="container hidden">
+    <h1>Conceitos Protetores</h1>
+    
+    <div class="concept-card">
+        <h3>Stress Index (SI)</h3>
+        <p>Formato da curva pressão-tempo em VCV com fluxo constante.</p>
+        
+        <div class="si-grid">
+            <div class="si-item" style="border-top: 3px solid #f59e0b">
+                <svg viewBox="0 0 100 60">
+                    <path d="M 10 50 Q 30 10 90 10" stroke="#f59e0b" stroke-width="3" fill="none" />
+                    <line x1="10" y1="55" x2="95" y2="55" stroke="currentColor" stroke-width="1" />
+                    <line x1="5" y1="5" x2="5" y2="55" stroke="currentColor" stroke-width="1" />
+                </svg>
+                <strong>SI < 1</strong><br>Convexa<br><span style="color:#f59e0b">Recrutamento</span>
+            </div>
+            <div class="si-item" style="border-top: 3px solid #10b981">
+                <svg viewBox="0 0 100 60">
+                    <line x1="10" y1="50" x2="90" y2="10" stroke="#10b981" stroke-width="3" />
+                    <line x1="10" y1="55" x2="95" y2="55" stroke="currentColor" stroke-width="1" />
+                    <line x1="5" y1="5" x2="5" y2="55" stroke="currentColor" stroke-width="1" />
+                </svg>
+                <strong>SI = 1</strong><br>Linear<br><span style="color:#10b981">Ideal</span>
+            </div>
+            <div class="si-item" style="border-top: 3px solid #ef4444">
+                <svg viewBox="0 0 100 60">
+                    <path d="M 10 50 Q 80 50 90 10" stroke="#ef4444" stroke-width="3" fill="none" />
+                    <line x1="10" y1="55" x2="95" y2="55" stroke="currentColor" stroke-width="1" />
+                    <line x1="5" y1="5" x2="5" y2="55" stroke="currentColor" stroke-width="1" />
+                </svg>
+                <strong>SI > 1</strong><br>Côncava<br><span style="color:#ef4444">Sobredistensão</span>
+            </div>
+        </div>
     </div>
+
+    <div class="concept-card">
+        <h3>Complacência Estática (C<sub>st</sub>)</h3>
+        <p>Elasticidade do pulmão (Vt / Driving Pressure).</p>
+        <p><em>Alvo: > 50 mL/cmH2O.</em></p>
+    </div>
+
+    <div class="concept-card" style="border:none">
+        <h3>Driving Pressure (∆P)</h3>
+        <p>Principal preditor de mortalidade. Meta: ≤ 14 cmH2O.</p>
+    </div>
+</div>
+
+<div class="reference">
+    Giosa (2019) | Gattinoni (2016) | Becher (2019) | Grasso (2005)
 </div>
 
 <script>
     let globalMP = 0, globalDP = 0, globalVtKg = 0;
+
+    function showTab(tab) {
+        document.getElementById('tab-calc').classList.toggle('hidden', tab !== 'calc');
+        document.getElementById('tab-concepts').classList.toggle('hidden', tab !== 'concepts');
+        document.getElementById('btn-calc').classList.toggle('active', tab === 'calc');
+        document.getElementById('btn-concepts').classList.toggle('active', tab === 'concepts');
+    }
 
     function updatePBW() {
         const h = parseFloat(document.getElementById('height').value);
@@ -165,11 +226,6 @@
         if (f === 'becher') { show('group-pinsp'); }
     }
 
-    function togglePneumo() {
-        const cb = document.getElementById('pneumo');
-        cb.checked = !cb.checked;
-    }
-
     function calculate() {
         const f = document.getElementById('formula').value;
         const tv_ml = parseFloat(document.getElementById('tv').value) || 0;
@@ -181,41 +237,62 @@
         const pinsp = parseFloat(document.getElementById('pinsp').value) || 0;
         const pbw = updatePBW();
         const tv = tv_ml / 1000;
+        let fText = "";
 
-        if (f === 'giosa') { globalMP = ((tv * rr) * (peak + peep + (flow/6))) / 20; globalDP = peak - peep; }
-        else if (f === 'gattinoni') { globalMP = 0.098 * rr * tv * (peak - ((plat - peep) / 2)); globalDP = plat - peep; }
-        else if (f === 'becher') { globalMP = 0.098 * rr * tv * (peep + pinsp); globalDP = pinsp; }
+        if (f === 'giosa') { 
+            globalMP = ((tv * rr) * (peak + peep + (flow/6))) / 20; 
+            globalDP = peak - peep;
+            fText = "MP = [ (VolMin) * (Pico + PEEP + Fluxo/6) ] / 20";
+        } else if (f === 'gattinoni') { 
+            globalMP = 0.098 * rr * tv * (peak - ((plat - peep) / 2)); 
+            globalDP = plat - peep;
+            fText = "MP = 0.098 * FR * Vt * [ Pico - (∆P / 2) ]";
+        } else if (f === 'becher') { 
+            globalMP = 0.098 * rr * tv * (peep + pinsp); 
+            globalDP = pinsp;
+            fText = "MP = 0.098 * FR * Vt * (PEEP + Pinsp)";
+        }
 
-        if (globalMP <= 0 || isNaN(globalMP)) return alert("Dados insuficientes.");
-        
+        if (globalMP <= 0 || isNaN(globalMP)) return alert("Dados insuficientes para o cálculo.");
+
         globalVtKg = pbw > 0 ? (tv_ml / pbw) : 0;
         document.getElementById('result-card').style.display = 'block';
         document.getElementById('power-value').innerText = globalMP.toFixed(1) + " J/min";
         document.getElementById('res-dp').innerText = globalDP.toFixed(0) + " cmH2O";
+        document.getElementById('res-comp').innerText = globalDP > 0 ? (tv_ml / globalDP).toFixed(0) + " mL/cmH2O" : "-";
         document.getElementById('res-mlkg').innerText = globalVtKg > 0 ? globalVtKg.toFixed(1) : "-";
-        
-        let color = "#10b981";
-        if (globalMP >= 12) color = "#f59e0b";
-        if (globalMP >= 17) color = "#ef4444";
+        document.getElementById('res-ve').innerText = (tv * rr).toFixed(1) + " L/min";
+        document.getElementById('formula-text').innerText = fText;
+
+        // Cores do Resultado
+        let color = "var(--success)";
+        if (globalMP >= 12) color = "var(--warning)";
+        if (globalMP >= 17) color = "var(--danger)";
         document.getElementById('power-value').style.color = color;
 
+        // Dicas Inteligentes
         let tips = [];
-        if (document.getElementById('pneumo').checked) {
-            tips.push("⚡ <strong>Pneumoperitônio:</strong> O aumento do MP é esperado pela restrição da complacência. Considere titular PEEP para reduzir a Driving Pressure.");
-        }
+        if (document.getElementById('pneumo').checked) tips.push("⚡ <strong>Pneumoperitônio:</strong> O aumento do MP é esperado. Se DP > 14, otimize PEEP.");
         
         if (globalMP >= 12) {
-            if (rr >= 20 && (rr/15 > globalDP/12)) tips.push("📌 Foco na FR: Reduzir a frequência pode ser a manobra mais eficaz.");
-            else if (globalDP > 14) tips.push("📌 Foco na ∆P: Driving Pressure alta. Reduza volume ou verifique bloqueio neuromuscular.");
+            const rrWeight = rr / 15;
+            const dpWeight = globalDP / 12;
+            if (rr >= 20 && rrWeight > dpWeight) tips.push("🎯 <strong>Ajuste FR:</strong> A frequência é o maior driver de risco. Considere reduzir se o CO2 permitir.");
+            else if (globalDP > 14) tips.push("🎯 <strong>Ajuste Pressão:</strong> Driving Pressure elevada. Reduza o Volume Corrente.");
+            else if (globalVtKg > 7) tips.push("🎯 <strong>Ajuste Volume:</strong> Paciente recebendo > 7 mL/kg PBW.");
+        } else {
+            tips.push("✅ Valores dentro da zona de segurança.");
         }
-        document.getElementById('tips').innerHTML = tips.length ? tips.join('<br>') : "✅ Parâmetros protetores.";
-        document.getElementById('formula-text').innerText = f === 'giosa' ? "MP = [VE * (Pico + PEEP + F/6)] / 20" : "MP = 0.098 * FR * Vt * [Pico - (∆P/2)]";
+        document.getElementById('tips').innerHTML = tips.join('<br><br>');
     }
 
     function copySummary() {
         const text = `Mechanical Power: ${globalMP.toFixed(1)} J/min | DP: ${globalDP.toFixed(0)} | Vt: ${globalVtKg.toFixed(1)} mL/kg PBW.`;
-        navigator.clipboard.writeText(text);
-        alert("Resumo copiado!");
+        if (navigator.share) {
+            navigator.share({ title: 'Resumo Ventilatório', text: text }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(text).then(() => alert("Copiado!"));
+        }
     }
 
     updateFormulaOptions();
