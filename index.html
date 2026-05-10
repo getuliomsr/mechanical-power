@@ -17,121 +17,99 @@
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        
         body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
-        
         .container { background: var(--surface); max-width: 500px; width: 100%; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        
         h1 { font-size: 1.5rem; text-align: center; color: var(--primary); margin-bottom: 5px; }
-        p.subtitle { text-align: center; font-size: 0.9rem; color: #6b7280; margin-bottom: 20px; }
-        
-        .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-        .form-group { margin-bottom: 15px; flex: 1; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9rem; }
-        select, input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; transition: border-color 0.2s; }
-        select:focus, input:focus { outline: none; border-color: var(--primary); }
-        
+        p.subtitle { text-align: center; font-size: 0.8rem; color: #6b7280; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .form-group { margin-bottom: 12px; flex: 1; }
+        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.85rem; color: #4b5563; }
+        select, input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
         .hidden { display: none; }
-        
-        button { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        button:hover { background: #1d4ed8; }
-        
-        #result-card { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; }
-        #power-value { font-size: 2rem; font-weight: bold; margin: 10px 0; }
-        .sub-value { font-size: 1.1rem; font-weight: normal; margin-bottom: 5px; color: #374151; }
-        .pbw-info { font-size: 0.9rem; color: #6b7280; margin-bottom: 15px; }
-        #status-badge { display: inline-block; padding: 5px 12px; border-radius: 9999px; font-weight: bold; font-size: 0.85rem; color: white; margin-bottom: 15px; }
-        .tips { font-size: 0.9rem; text-align: left; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 6px; }
-        
-        .reference { margin-top: 30px; font-size: 0.75rem; color: #9ca3af; text-align: justify; border-top: 1px solid var(--border); padding-top: 10px; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+        #result-card { margin-top: 20px; padding: 18px; border-radius: 10px; display: none; }
+        #power-value { font-size: 2.2rem; font-weight: 800; margin: 5px 0; }
+        .sub-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; }
+        .metric-box { text-align: center; background: rgba(255,255,255,0.4); padding: 8px; border-radius: 6px; }
+        .metric-label { font-size: 0.7rem; color: #6b7280; text-transform: uppercase; }
+        .metric-val { font-size: 1rem; font-weight: bold; }
+        #status-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-weight: bold; font-size: 0.75rem; color: white; margin-bottom: 10px; }
+        .tips { font-size: 0.9rem; text-align: left; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 8px; border-left: 4px solid #cbd5e1; }
+        .reference { margin-top: 30px; font-size: 0.7rem; color: #9ca3af; text-align: center; line-height: 1.4; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Mechanical Power</h1>
-    <p class="subtitle">Avaliação à Beira do Leito</p>
+    <p class="subtitle">Anestesia e Transoperatório</p>
 
     <div class="form-row">
         <div class="form-group">
-            <label for="gender">Sexo</label>
-            <select id="gender">
-                <option value="m">Masculino</option>
-                <option value="f">Feminino</option>
-            </select>
+            <label>Sexo</label>
+            <select id="gender"><option value="m">Masc</option><option value="f">Fem</option></select>
         </div>
         <div class="form-group">
-            <label for="height">Altura (cm)</label>
-            <input type="number" id="height" placeholder="ex: 170">
+            <label>Altura (cm)</label>
+            <input type="number" id="height" placeholder="170">
         </div>
     </div>
 
     <div class="form-row">
         <div class="form-group">
-            <label for="mode">Modo</label>
+            <label>Modo</label>
             <select id="mode" onchange="updateForm()">
                 <option value="vcv">VCV</option>
                 <option value="pcv">PCV</option>
             </select>
         </div>
-
-        <div class="form-group" id="formula-group">
-            <label for="formula">Fórmula</label>
+        <div class="form-group">
+            <label>Fórmula</label>
             <select id="formula" onchange="updateForm()">
-                <option value="giosa">Giosa (Simplificada)</option>
-                <option value="gattinoni">Gattinoni (Referência)</option>
+                <option value="giosa">Giosa (Surrogate)</option>
+                <option value="gattinoni">Gattinoni (Original)</option>
             </select>
         </div>
     </div>
 
     <div class="form-group" id="group-tv">
-        <label for="tv">Volume Corrente (mL)</label>
-        <input type="number" id="tv" placeholder="ex: 450">
+        <label>Volume Corrente (mL)</label>
+        <input type="number" id="tv" placeholder="450">
     </div>
 
     <div class="form-row">
-        <div class="form-group" id="group-rr">
-            <label for="rr">FR (irpm)</label>
-            <input type="number" id="rr" placeholder="ex: 15">
-        </div>
-        <div class="form-group" id="group-peep">
-            <label for="peep">PEEP (cmH2O)</label>
-            <input type="number" id="peep" placeholder="ex: 5">
-        </div>
+        <div class="form-group" id="group-rr"><label>FR (irpm)</label><input type="number" id="rr" placeholder="12"></div>
+        <div class="form-group" id="group-peep"><label>PEEP (cmH2O)</label><input type="number" id="peep" placeholder="5"></div>
     </div>
 
     <div class="form-row">
-        <div class="form-group" id="group-peak">
-            <label for="peak">P. Pico (cmH2O)</label>
-            <input type="number" id="peak" placeholder="ex: 25">
-        </div>
-        <div class="form-group hidden" id="group-plat">
-            <label for="plat">P. Platô (cmH2O)</label>
-            <input type="number" id="plat" placeholder="ex: 20">
-        </div>
+        <div class="form-group" id="group-peak"><label>P. Pico</label><input type="number" id="peak" placeholder="20"></div>
+        <div class="form-group hidden" id="group-plat"><label>P. Platô</label><input type="number" id="plat" placeholder="18"></div>
+        <div class="form-group hidden" id="group-pinsp"><label>∆P / Pinsp</label><input type="number" id="pinsp" placeholder="15"></div>
     </div>
 
     <div class="form-group" id="group-flow">
-        <label for="flow">Fluxo Inspiratório (L/min)</label>
-        <input type="number" id="flow" placeholder="ex: 60">
+        <label>Fluxo (L/min)</label>
+        <input type="number" id="flow" value="60">
     </div>
 
-    <div class="form-group hidden" id="group-pinsp">
-        <label for="pinsp">Pinsp (Pressão de Suporte acima da PEEP)</label>
-        <input type="number" id="pinsp" placeholder="ex: 15">
-    </div>
-
-    <button onclick="calculatePower()">Calcular MP</button>
+    <button onclick="calculatePower()">Calcular e Analisar</button>
 
     <div id="result-card">
-        <h3 style="margin: 0; color: #374151;">Mechanical Power</h3>
+        <div id="status-badge">RESULTADO</div>
         <div id="power-value">0.0 J/min</div>
-        <div id="status-badge">Analisando...</div>
+        
+        <div class="sub-metrics">
+            <div class="metric-box"><div class="metric-label">DP (∆P)</div><div id="val-dp" class="metric-val">-</div></div>
+            <div class="metric-box"><div class="metric-label">mL/kg PBW</div><div id="val-mlkg" class="metric-val">-</div></div>
+        </div>
+
         <div class="tips" id="clinical-tips"></div>
     </div>
 
     <div class="reference">
-        <strong>Referência:</strong> Giosa, L. et al. Mechanical power at a glance. Intensive Care Med Exp 7, 61 (2019). Limiar de risco baseado no não-normalizado de 18 J/min. O uso de Peso Predito segue a fórmula ARDSNet.
+        Giosa et al. (2019) | Gattinoni et al. (2016) | Becher et al. (2019)<br>
+        <strong>Nota:</strong> Alvo ideal < 12 J/min. Alerta > 17-18 J/min.
     </div>
 </div>
 
@@ -139,144 +117,96 @@
     function updateForm() {
         const mode = document.getElementById('mode').value;
         const formulaSelect = document.getElementById('formula');
-        
         if (mode === 'pcv') {
-            formulaSelect.innerHTML = '<option value="becher">Becher et al.</option>';
+            formulaSelect.innerHTML = '<option value="becher">Becher et al. (Simplificada)</option>';
         } else {
-            if(formulaSelect.querySelector('option[value="becher"]')) {
-                formulaSelect.innerHTML = '<option value="giosa">Giosa (Simplificada)</option><option value="gattinoni">Gattinoni (Referência)</option>';
-            }
+            formulaSelect.innerHTML = '<option value="giosa">Giosa (Surrogate)</option><option value="gattinoni">Gattinoni (Original)</option>';
         }
+        const f = formulaSelect.value;
+        const fields = ['group-tv','group-rr','group-peep','group-peak','group-plat','group-flow','group-pinsp'];
+        fields.forEach(id => document.getElementById(id).classList.add('hidden'));
 
-        const formula = document.getElementById('formula').value;
-
-        // Resetar visibilidade
-        const fields = ['group-tv', 'group-rr', 'group-peep', 'group-peak', 'group-plat', 'group-flow', 'group-pinsp'];
-        fields.forEach(f => document.getElementById(f).classList.add('hidden'));
-
-        // Ativar de acordo com a fórmula
         document.getElementById('group-tv').classList.remove('hidden');
         document.getElementById('group-rr').classList.remove('hidden');
         document.getElementById('group-peep').classList.remove('hidden');
 
-        if (formula === 'giosa') {
-            document.getElementById('group-peak').classList.remove('hidden');
-            document.getElementById('group-flow').classList.remove('hidden');
-        } else if (formula === 'gattinoni') {
-            document.getElementById('group-peak').classList.remove('hidden');
-            document.getElementById('group-plat').classList.remove('hidden');
-        } else if (formula === 'becher') {
-            document.getElementById('group-pinsp').classList.remove('hidden');
-        }
+        if (f === 'giosa') { document.getElementById('group-peak').classList.remove('hidden'); document.getElementById('group-flow').classList.remove('hidden'); }
+        else if (f === 'gattinoni') { document.getElementById('group-peak').classList.remove('hidden'); document.getElementById('group-plat').classList.remove('hidden'); }
+        else if (f === 'becher') { document.getElementById('group-pinsp').classList.remove('hidden'); }
     }
 
     function calculatePower() {
-        const formula = document.getElementById('formula').value;
-        
-        // Dados Ventilatórios
+        const f = document.getElementById('formula').value;
         const tv_ml = parseFloat(document.getElementById('tv').value) || 0;
-        const tv = tv_ml / 1000; 
+        const tv = tv_ml / 1000;
         const rr = parseFloat(document.getElementById('rr').value) || 0;
         const peep = parseFloat(document.getElementById('peep').value) || 0;
         const peak = parseFloat(document.getElementById('peak').value) || 0;
         const plat = parseFloat(document.getElementById('plat').value) || 0;
         const flow = parseFloat(document.getElementById('flow').value) || 0;
         const pinsp = parseFloat(document.getElementById('pinsp').value) || 0;
-
-        // Dados Antropométricos
-        const gender = document.getElementById('gender').value;
         const height = parseFloat(document.getElementById('height').value) || 0;
-        
-        let pbw = 0;
-        if (height > 0) {
-            if (gender === 'm') {
-                pbw = 50 + 0.91 * (height - 152.4);
-            } else {
-                pbw = 45.5 + 0.91 * (height - 152.4);
-            }
-        }
+        const gender = document.getElementById('gender').value;
 
-        let power = 0;
-        let tips = [];
+        // PBW
+        let pbw = gender === 'm' ? (50 + 0.91 * (height - 152.4)) : (45.5 + 0.91 * (height - 152.4));
+        if (height <= 0) pbw = 0;
 
-        // Cálculos do Power
-        if (formula === 'giosa') {
-            const ve = tv * rr;
-            power = (ve * (peak + peep + (flow / 6))) / 20;
-        } else if (formula === 'gattinoni') {
-            power = 0.098 * rr * tv * (peak - ((plat - peep) / 2));
-        } else if (formula === 'becher') {
-            power = 0.098 * rr * tv * (peep + pinsp);
-        }
+        // DP e MP
+        let dp = 0;
+        let mp = 0;
+        if (f === 'giosa') { mp = ((tv * rr) * (peak + peep + (flow/6))) / 20; dp = peak - peep; }
+        else if (f === 'gattinoni') { mp = 0.098 * rr * tv * (peak - ((plat - peep) / 2)); dp = plat - peep; }
+        else if (f === 'becher') { mp = 0.098 * rr * tv * (peep + pinsp); dp = pinsp; }
 
-        // Validação básica
-        if(power <= 0 || isNaN(power)) {
-            alert("Por favor, preencha os parâmetros ventilatórios corretamente.");
-            return;
-        }
+        if (mp <= 0 || isNaN(mp)) return alert("Dados inválidos.");
 
-        // Construir visualização do resultado
-        const resultCard = document.getElementById('result-card');
-        const powerValue = document.getElementById('power-value');
+        // UI Update
+        const card = document.getElementById('result-card');
+        const pVal = document.getElementById('power-value');
         const badge = document.getElementById('status-badge');
         const tipsDiv = document.getElementById('clinical-tips');
+        
+        card.style.display = 'block';
+        pVal.innerText = mp.toFixed(1) + " J/min";
+        document.getElementById('val-dp').innerText = dp.toFixed(0);
+        document.getElementById('val-mlkg').innerText = pbw > 0 ? (tv_ml/pbw).toFixed(1) : "-";
 
-        resultCard.style.display = 'block';
+        // Logic para Cores e Alertas
+        let color = "var(--success)";
+        let status = "BAIXO RISCO";
+        if (mp >= 12 && mp < 17) { color = "var(--warning)"; status = "RISCO MODERADO"; }
+        else if (mp >= 17) { color = "var(--danger)"; status = "ALTO RISCO"; }
         
-        let resultHtml = `${power.toFixed(2)} J/min`;
-        
-        if (pbw > 0) {
-            let normalizedPower = power / pbw;
-            let vtKg = tv_ml / pbw;
+        card.style.backgroundColor = color + "15";
+        pVal.style.color = color;
+        badge.style.backgroundColor = color;
+        badge.innerText = status;
+
+        // LÓGICA DE DICAS INTELIGENTES
+        let tips = [];
+        if (mp >= 12) {
+            // Verifica o maior contribuidor
+            const rrWeight = rr / 15; // Normalizado para uma FR de 15
+            const dpWeight = dp / 12; // Normalizado para uma DP de 12
             
-            resultHtml += `<div class="sub-value">Norm: ${normalizedPower.toFixed(3)} J/min/kg</div>`;
-            resultHtml += `<div class="pbw-info">Peso Predito: ${pbw.toFixed(1)} kg | Vt: ${vtKg.toFixed(1)} mL/kg</div>`;
-            
-            if (vtKg > 6.5) {
-                tips.push(`- <strong>Volume Corrente alto:</strong> O paciente está recebendo ${vtKg.toFixed(1)} mL/kg de peso predito. O alvo protetor clássico para prevenir VILI é de 6 mL/kg.`);
-            } else if (vtKg < 5.5) {
-                tips.push(`- <strong>Volume Corrente ultra-protetor:</strong> (${vtKg.toFixed(1)} mL/kg). Monitore PCO2 e o risco de atelectasia se PEEP estiver muito baixa.`);
+            if (rr >= 20 && rrWeight > dpWeight) {
+                tips.push("🎯 <strong>Ajuste Prioritário (FR):</strong> O aumento do Mechanical Power está sendo impulsionado principalmente pela Frequência Respiratória alta. Considere reduzir a FR e tolerar uma leve hipercapnia.");
+            } else if (dp > 14) {
+                tips.push("🎯 <strong>Ajuste Prioritário (Pressão):</strong> A Driving Pressure está elevada (>14). Reduza o Volume Corrente ou ajuste a pressão inspiratória para proteger o pulmão.");
+            } else if (pbw > 0 && (tv_ml/pbw) > 7) {
+                tips.push("🎯 <strong>Ajuste Prioritário (Volume):</strong> O volume por kg está alto. Reduzir para 6mL/kg PBW é a forma mais eficaz de baixar este MP.");
+            } else {
+                tips.push("💡 Considere uma estratégia de ventilação protetora global: reduza Volume ou FR conforme a estabilidade hemodinâmica e gasométrica.");
             }
         } else {
-             tips.push("- <em>Preencha a Altura para calcular o Peso Predito e o Volume Corrente ideal (mL/kg).</em>");
-        }
-        
-        powerValue.innerHTML = resultHtml;
-
-        // Classificação Giosa
-        let drivingPressure = formula === 'gattinoni' ? (plat - peep) : (formula === 'becher' ? pinsp : (peak - peep));
-        
-        if (power < 12) {
-            resultCard.style.backgroundColor = '#ecfdf5';
-            powerValue.style.color = 'var(--success)';
-            badge.style.backgroundColor = 'var(--success)';
-            badge.innerText = 'Risco Baixo';
-            tips.push("✅ O paciente parece estar recebendo ventilação adequada. Mantenha a vigilância.");
-        } else if (power >= 12 && power < 18) {
-            resultCard.style.backgroundColor = '#fffbeb';
-            powerValue.style.color = 'var(--warning)';
-            badge.style.backgroundColor = 'var(--warning)';
-            badge.innerText = 'Risco Moderado';
-            tips.push("⚠️ O alvo está em uma zona cinzenta. Considere ajustes se o paciente for de alto risco para VILI.");
-        } else {
-            resultCard.style.backgroundColor = '#fef2f2';
-            powerValue.style.color = 'var(--danger)';
-            badge.style.backgroundColor = 'var(--danger)';
-            badge.innerText = 'Risco Elevado (>18 J/min)';
-            tips.push("🚨 Alta transferência de energia para o pulmão.");
+            tips.push("✅ Parâmetros protetores. MP dentro da zona de segurança.");
         }
 
-        // Análise Adicional
-        if (power >= 12) {
-            if (rr > 22) tips.push("- <strong>Frequência alta:</strong> Avalie tolerar hipercapnia permissiva reduzindo a RR.");
-            if (drivingPressure > 14) tips.push("- <strong>Driving Pressure alta:</strong> Reduza o Volume Corrente ou a Pinsp se clinicamente possível.");
-            if (formula === 'giosa' && flow > 60) tips.push("- <strong>Fluxo alto:</strong> Reduzir o fluxo aumenta o tempo inspiratório, mas diminui a pressão resistiva.");
-        }
+        if (dp > 14) tips.push("⚠️ <strong>Atenção:</strong> Driving Pressure elevada (" + dp.toFixed(0) + ") associada a maior lesão pulmonar.");
 
         tipsDiv.innerHTML = tips.join('<br><br>');
     }
-
-    // Inicialização
     updateForm();
 </script>
 </body>
