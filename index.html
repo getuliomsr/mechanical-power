@@ -52,15 +52,23 @@
 <div class="container">
     <h1>Mechanical Power Calc</h1>
 
-    <div class="form-row">
-        <div class="form-group">
+    <div class="form-row" style="align-items: flex-start;">
+        <div class="form-group" style="flex: 0.8;">
             <label>Sexo</label>
-            <select id="gender" onchange="updatePBW()"><option value="m">Masc</option><option value="f">Fem</option></select>
+            <select id="gender" onchange="updatePBW()">
+                <option value="m">Masc</option>
+                <option value="f">Fem</option>
+            </select>
         </div>
-        <div class="form-group">
+        <div class="form-group" style="flex: 1;">
             <label>Altura (cm)</label>
             <input type="number" id="height" placeholder="Ex: 175" oninput="updatePBW()">
-            <span id="pbw-display" class="pbw-badge">PBW: -- kg</span>
+        </div>
+        <div class="form-group" style="flex: 1.2;">
+            <label>Peso Predito (PBW)</label>
+            <div id="pbw-display" style="padding: 10px; background: #eff6ff; border: 1px solid #dbeafe; border-radius: 6px; font-weight: bold; color: var(--primary); text-align: center; height: 41px; display: flex; align-items: center; justify-content: center;">
+                -- kg
+            </div>
         </div>
     </div>
 
